@@ -12,7 +12,7 @@ const AddDoctor = () => {
   const [experience, setExperience] = useState("1 Year");
   const [fees, setFees] = useState("");
   const [about, setAbout] = useState("");
-  const [speciality, setSpeciality] = useState("General physican");
+  const [speciality, setSpeciality] = useState("General physician");
   const [degree, setDegree] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
@@ -51,18 +51,28 @@ const AddDoctor = () => {
       const { data } = await axios.post(
         backendUrl + "/api/admin/add-doctor",
         formData,
-        { headers: { aToken } }
+        { headers: { Authorization: `Bearer ${aToken}` } }
       );
-      console.log("backend data is coming", backendUrl);
-      console.log("data is not coming", data);
-      console.log("image data is not comming", docImg);
+
 
       if (data.success) {
         toast.success(data.message);
+        setDocImg(false)
+        setName("")
+        setAbout("")
+        setAddress1("")
+        setAddress2("")
+        setEmail("")
+        setFees("")
+        setPassword("")
+
       } else {
-        toast.error("Haman is not open", data.message);
+        toast.error(data.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error)
+      console.log(error)
+    }
   };
 
   return (
@@ -123,9 +133,8 @@ const AddDoctor = () => {
               />
             </div>
 
-            <div>
-              {" "}
-              className="gap-2 flex-1 flex flex-col"
+            <div className="gap-2 flex-1 flex flex-col">
+
               <p>Experience</p>
               <select
                 onChange={(e) => setExperience(e.target.value)}
@@ -168,7 +177,7 @@ const AddDoctor = () => {
                 value={speciality}
                 className="border rounded px-3 py-2"
               >
-                <option value="General physican">General physican</option>
+                <option value="General physican">General physician</option>
                 <option value="Gynecologist">Gynecologist</option>
                 <option value="Dermatologist">Dermatologist</option>
                 <option value="Pediatricians">Pediatricians</option>
